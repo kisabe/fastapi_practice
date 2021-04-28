@@ -58,3 +58,29 @@ async def post(
         db.add(engine, Message(body=message))
 
     return makeResponse(request, engine, error_msg)
+
+
+@app.post("/delete-all/", response_class=HTMLResponse)
+async def delete_all(
+    request: Request,
+    engine: sa.engine.Connectable = Depends(get_engine),
+) -> Response:
+    db.delete_all(engine)
+    return makeResponse(request, engine, None)
+
+
+# @app.post("/", response_class=HTMLResponse)
+# async def remove(
+#     request: Request,
+#     engine: sa.engine.Connectable = Depends(get_engine),
+#     message: Optional[str] = Form(None),
+# ) -> Response:
+#     error_msg = None
+#     if not message:
+#         error_msg = "何か書いてください"
+#     elif len(message) != setting.message_length:
+#         error_msg = "投稿は3文字限定です"
+#     else:
+#         db.remove(engine, Message(body=message))
+
+#     return makeResponse(request, engine, error_msg)

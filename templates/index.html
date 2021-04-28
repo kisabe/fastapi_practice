@@ -17,7 +17,7 @@
         <form method="POST" action="/" class="form-inline">
             <label for="message" class="form-label m-2">メッセージ</label>
             <input type="text" class="form-control m-2" id="message" name="message">
-            <button type="submit" class="btn btn-primary m-3">投稿</button>
+            <button type="submit" name="" class="btn btn-primary m-3">投稿</button>
         </form>
         <table class="table">
             <thead>
@@ -40,6 +40,9 @@
                 {% endfor %}
             </tbody>
         </table>
+        <form method="POST" action="/delete-all" class="form-inline">
+            <button type="submit" name="" class="btn btn-primary m-3">投稿を全て削除</button>
+        </form>
     </div>
 </body>
 

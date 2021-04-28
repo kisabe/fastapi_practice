@@ -39,3 +39,16 @@ def add(engine: sa.engine.Connectable, message: Message) -> None:
     with engine.connect() as connection:
         query = message_table.insert()
         connection.execute(query, message.dict())
+
+
+def remove(engine: sa.engine.Connectable, message: Message) -> None:
+    """メッセージの削除"""
+    with engine.connect() as connection:
+        query = message_table.delete()
+        connection.execute(query, message.dict())
+
+
+def delete_all(engine: sa.engine.Connectable) -> None:
+    """メッセージをすべて消す（テスト用）"""
+    with engine.connect() as connection:
+        connection.execute(message_table.delete())
