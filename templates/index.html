@@ -24,7 +24,8 @@
                 <tr>
                     <th>日時</th>
                     <th>コメント</th>
-                    <th>test</th>
+                    <th>ブックマーク</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -37,10 +38,25 @@
                     {% endif %}
 
                     <td class="message-body">{{ message.body }}</td>
+
+                    {% if message.bookmark %}
+                    <td>
+                        <form method="POST" action={{ "/update/" + message.id|string }} class="form-inline">
+                            <button type="submit" name="bookmark" value={{ False }} class="btn btn-success">★</button>
+                        </form>
+                    </td>
+                    {% else %}
+                    <td>
+                        <form method="POST" action={{ "/update/" + message.id|string }} class="form-inline">
+                            <button type="submit" name="bookmark" value={{ True }}
+                                class="btn btn-outline-success">☆</button>
+                        </form>
+                    </td>
+                    {% endif %}
                     <td>
                         <form method="POST" action="/delete" class="form-inline">
                             <button type="submit" name="delete_id" value={{ message.id }}
-                                class="btn btn-primary m-3">削除</button>
+                                class="btn btn-danger">削除</button>
                         </form>
                     </td>
                 </tr>

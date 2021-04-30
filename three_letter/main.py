@@ -80,7 +80,24 @@ async def remove(
         error_msg = "不正な削除です"
     else:
         delete_id = int(delete_id)
-        # print(f"id: {delete_id}を削除します")
         db.remove(engine, delete_id)
+
+    return makeResponse(request, engine, error_msg)
+
+
+@app.post("/update/{message_id}", response_class=HTMLResponse)
+async def update(
+    request: Request,
+    message_id: str,
+    engine: sa.engine.Connectable = Depends(get_engine),
+    bookmark: Optional[bool] = Form(None),
+) -> Response:
+    message_id = int(message_id)
+    error_msg = None
+    if bookmark is None:
+        error_msg = "不正な更新です"
+    else:
+        print(f"id:{message_id}のbookmarkを{bookmark}にしました")
+        db.update(engine, message_id, bookmark)
 
     return makeResponse(request, engine, error_msg)

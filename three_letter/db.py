@@ -13,6 +13,7 @@ message_table = sa.Table(
         sa.DateTime,
         nullable=False,
     ),
+    sa.Column("bookmark", sa.Boolean, nullable=False),
 )
 
 
@@ -24,7 +25,12 @@ def find_all(engine: sa.engine.Connectable) -> list[Message]:
     """投稿メッセージを全部取得"""
     with engine.connect() as connection:
         query = sa.sql.select(
-            (message_table.c.id, message_table.c.body, message_table.c.created_at)
+            (
+                message_table.c.id,
+                message_table.c.body,
+                message_table.c.created_at,
+                message_table.c.bookmark,
+            )
         )
         return [Message(**m) for m in connection.execute(query)]
 
@@ -40,6 +46,17 @@ def remove(engine: sa.engine.Connectable, message_id: int) -> None:
     """メッセージの削除"""
     with engine.connect() as connection:
         query = message_table.delete().where(message_table.c.id == message_id)
+        connection.execute(query)
+
+
+def update(engine: sa.engine.Connectable, message_id: int, bookmark: bool) -> None:
+    """メッセージの更新"""
+    with engine.connect() as connection:
+        query = (
+            message_table.update()
+            .where(message_table.c.id == message_id)
+            .values({"bookmark": bookmark})
+        )
         connection.execute(query)
 
 
