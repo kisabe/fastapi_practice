@@ -7,4 +7,4 @@ from datetime import datetime
 class Message(BaseModel):
     id: Optional[int]
     body: str
-    createdAt: Optional[datetime]
+    created_at: datetime = datetime.now()

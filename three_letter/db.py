@@ -12,7 +12,6 @@ message_table = sa.Table(
         "created_at",
         sa.DateTime,
         nullable=False,
-        server_default=sa.sql.functions.current_timestamp(),
     ),
 )
 
@@ -25,11 +24,7 @@ def find_all(engine: sa.engine.Connectable) -> list[Message]:
     """投稿メッセージを全部取得"""
     with engine.connect() as connection:
         query = sa.sql.select(
-            (
-                message_table.c.id,
-                message_table.c.body,
-                message_table.c.created_at.label("createdAt"),
-            )
+            (message_table.c.id, message_table.c.body, message_table.c.created_at)
         )
         return [Message(**m) for m in connection.execute(query)]
 
@@ -41,11 +36,11 @@ def add(engine: sa.engine.Connectable, message: Message) -> None:
         connection.execute(query, message.dict())
 
 
-def remove(engine: sa.engine.Connectable, message: Message) -> None:
+def remove(engine: sa.engine.Connectable, message_id: int) -> None:
     """メッセージの削除"""
     with engine.connect() as connection:
-        query = message_table.delete()
-        connection.execute(query, message.dict())
+        query = message_table.delete().where(message_table.c.id == message_id)
+        connection.execute(query)
 
 
 def delete_all(engine: sa.engine.Connectable) -> None:
